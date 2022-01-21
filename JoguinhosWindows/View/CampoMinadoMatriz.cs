@@ -11,7 +11,7 @@ namespace CampoMinado.View
     {
         private ICollection<List<CampoMinadoAcao>> matrizDeCampos { get; set; }
         private static Random rnd { get; set; }
-        private int qtdeBombas { get; set; } = 3;
+        private int qtdeBombas { get; set; } = 10;
         private int qtdeLinhas { get; set; } = 10;
         private int qtdeColunas { get; set; } = 10;
         private CampoMinadoMatriz matrixMinada { get; set; }
@@ -34,6 +34,7 @@ namespace CampoMinado.View
                 int colunaDaBomba = 1;
                 int linhaDaBomba = 1;
                 int bombaPosicao = 1;
+                CampoMinadoAcao campo=null;
 
                 if (rnd == null)
                     rnd = new Random();
@@ -44,7 +45,6 @@ namespace CampoMinado.View
 
                 if (linhaDaBomba >= qtdeLinhas)
                     linhaDaBomba = qtdeLinhas - 1;
-
                 
                 if (bombaPosicao > linhaDaBomba)
                     colunaDaBomba = (bombaPosicao % qtdeColunas) > 0 ? (bombaPosicao % qtdeColunas) : (bombaPosicao / qtdeLinhas);
@@ -52,33 +52,19 @@ namespace CampoMinado.View
                 if (bombaPosicao < colunaDaBomba)
                     colunaDaBomba = bombaPosicao ;
 
-                if (bombaPosicao > qtdeLinhas)
-                {
-                    var campo = matrizDeCampos.ElementAt(linhaDaBomba).ElementAt(colunaDaBomba);
+                if (bombaPosicao > qtdeLinhas)                
+                     campo = matrizDeCampos.ElementAt(linhaDaBomba).ElementAt(colunaDaBomba);         
+                else                
+                     campo = matrizDeCampos.ElementAt(0).ElementAt(colunaDaBomba);                
 
-                    if (!campo.Minado)
-                    {
-                        campo.Minado = true;
-                        campo.Seguro = false;
-                        ++n;
-                    }
-                    else
-                        SorteiaBomba(ref n);
+                if (!campo.Minado)
+                {
+                    campo.Minado = true;
+                    campo.Seguro = false;
+                    ++n;
                 }
                 else
-                {
-                    var campo = matrizDeCampos.ElementAt(0).ElementAt(colunaDaBomba);
-
-                    if (!campo.Minado)
-                    {
-                        campo.Minado = true;
-                        campo.Seguro = false;
-                        ++n;
-                    }
-                    else
-                        SorteiaBomba(ref n);
-
-                }
+                    SorteiaBomba(ref n);
             }
             catch (Exception ex)
             {
@@ -144,7 +130,6 @@ namespace CampoMinado.View
             for (int i = 0; i < matrizDeCampos.Count; i++)
             {
                 var linha = matrizDeCampos.ElementAtOrDefault(i);
-
                 matrixMinada.RowCount = linha.Count;
 
                 for (int j = 0; j < linha.Count; j++)
@@ -163,13 +148,10 @@ namespace CampoMinado.View
 
             try
             {
-                if (qtdeBombas < (qtdeLinhas * qtdeColunas))
-                {
-                    while (bomba < qtdeBombas)
-                    {
-                        SorteiaBomba(ref bomba);
-                    }
-                }
+                if (qtdeBombas < (qtdeLinhas * qtdeColunas))                
+                    while (bomba < qtdeBombas)                    
+                        SorteiaBomba(ref bomba);                   
+                
             }
             catch (Exception e)
             {
@@ -196,12 +178,15 @@ namespace CampoMinado.View
 
                         campo.Vizinhos.Add(camposLinha.ElementAtOrDefault(j + 1));
                         campo.Vizinhos.Add(camposLinha.ElementAtOrDefault(j - 1));
+
                         campo.Vizinhos.Add(matrizDeCampos.ElementAtOrDefault(i - 1)?.ElementAtOrDefault(j + 1));
                         campo.Vizinhos.Add(matrizDeCampos.ElementAtOrDefault(i - 1)?.ElementAtOrDefault(j));
                         campo.Vizinhos.Add(matrizDeCampos.ElementAtOrDefault(i - 1)?.ElementAtOrDefault(j - 1));
+
                         campo.Vizinhos.Add(matrizDeCampos.ElementAtOrDefault(i + 1)?.ElementAtOrDefault(j + 1));
                         campo.Vizinhos.Add(matrizDeCampos.ElementAtOrDefault(i + 1)?.ElementAtOrDefault(j));
                         campo.Vizinhos.Add(matrizDeCampos.ElementAtOrDefault(i + 1)?.ElementAtOrDefault(j - 1));
+
                         campo.TotalVizinhosMinados = campo.Seguro ? campo.Vizinhos.Where(p => p != null && p.Minado).Count() : 0;
                         campo.VizinhosSeguro = campo.TotalVizinhosMinados == 0 ? true : false;
 
@@ -245,8 +230,6 @@ namespace CampoMinado.View
             }
 
         }
-
-
 
         #region [-------------------------------ICampoMinado--------------------------]
         public void Reiniciar(int totalLinhas = 0, int totalColunas = 0, int totalBombas = 0, Control container = null)

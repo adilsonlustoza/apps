@@ -74,6 +74,7 @@ namespace CampoMinado
             // 
             resources.ApplyResources(this.txtBombas, "txtBombas");
             this.txtBombas.Name = "txtBombas";
+            this.txtBombas.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtBombas_KeyPress);
             // 
             // label3
             // 
@@ -94,11 +95,13 @@ namespace CampoMinado
             // 
             resources.ApplyResources(this.txtColunas, "txtColunas");
             this.txtColunas.Name = "txtColunas";
+            this.txtColunas.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtColunas_KeyPress);
             // 
             // txtLinhas
             // 
             resources.ApplyResources(this.txtLinhas, "txtLinhas");
             this.txtLinhas.Name = "txtLinhas";
+            this.txtLinhas.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtLinhas_KeyPress);
             // 
             // btnRestart
             // 
@@ -117,7 +120,9 @@ namespace CampoMinado
             this.Controls.Add(this.pnlCampos);
             this.Controls.Add(this.pnlObjetos);
             this.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "frmCampoMinando";
             this.Load += new System.EventHandler(this.frmCampoMinando_Load);
             this.pnlObjetos.ResumeLayout(false);

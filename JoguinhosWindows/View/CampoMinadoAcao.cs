@@ -41,15 +41,12 @@ namespace CampoMinado.View
             iCampoMinadoAcao = campoMinadoAcao;
         }
   
-
         private void CampoMinadoBotaoPaint(object sender, PaintEventArgs e)
         {
-            this.DesenhaBotao3D(sender, e);
+           this.DesenhaBotao3D(sender, e);
         }
         private void CampoMinadoBotaoClick(object sender, MouseEventArgs e)
         {           
-
-            
             switch (e.Button)
             {
                 case MouseButtons.Left:
@@ -64,29 +61,25 @@ namespace CampoMinado.View
             this.iCampoMinadoAcao.ConfereVenceuJogo();
         }
         private void ClicadoEsquerdo()
-        {          
+        {      
 
                if (this.Image != null)
-               {
-                   if (MessageBox.Show("Este campo está marcado, deseja realmente abri-lo ? ", "Atenção", MessageBoxButtons.YesNo) == DialogResult.No)
-                   {
-                       this.Image = null;
-                       return;
-                   }
-               }
+                  if (MessageBox.Show("Este campo está marcado, deseja realmente abri-lo ? ", "Atenção", MessageBoxButtons.YesNo) == DialogResult.Yes)                   
+                       this.Image = null;               
 
                if (this.Seguro && this.Fechado)
-                   AbrirCampo(this);
+                   this.AbrirCampo(this);
+
                else if (this.Fechado && this.Minado)
                {
                    this.Aberto = true;
                    this.Image = Image.FromFile(Constantes.IMAGE_BOMB);
+
                 if (MessageBox.Show("Você perdeu, iniciar novo jogo? ", "Bomba", MessageBoxButtons.YesNo) == DialogResult.Yes)
                     this.iCampoMinadoAcao.Reiniciar();
                 else
                     this.iCampoMinadoAcao.Finaliza();
-               }
-           
+               }   
 
 
         }
@@ -162,7 +155,7 @@ namespace CampoMinado.View
             campo.FlatStyle = FlatStyle.System;
             campo.FlatAppearance.BorderColor = Color.Gray;
             campo.FlatAppearance.BorderSize = 1;
-            campo.Vizinhos.ToList().ForEach(vizinho => { if(vizinho!=null) AbrirCampo(vizinho); } );
+            campo.Vizinhos.ToList().ForEach(vizinho => { if(vizinho!=null) this.AbrirCampo(vizinho); } );
           
         }
     }
