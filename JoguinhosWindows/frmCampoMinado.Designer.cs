@@ -36,12 +36,9 @@ namespace CampoMinado
             this.pnlObjetos = new System.Windows.Forms.Panel();
             this.label4 = new System.Windows.Forms.Label();
             this.txtBombas = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.txtColunas = new System.Windows.Forms.TextBox();
-            this.txtLinhas = new System.Windows.Forms.TextBox();
             this.btnRestart = new System.Windows.Forms.Button();
+            this.comboBoxNivel = new System.Windows.Forms.ComboBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.pnlObjetos.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -55,13 +52,10 @@ namespace CampoMinado
             // 
             resources.ApplyResources(this.pnlObjetos, "pnlObjetos");
             this.pnlObjetos.BackColor = System.Drawing.SystemColors.Control;
+            this.pnlObjetos.Controls.Add(this.label1);
+            this.pnlObjetos.Controls.Add(this.comboBoxNivel);
             this.pnlObjetos.Controls.Add(this.label4);
             this.pnlObjetos.Controls.Add(this.txtBombas);
-            this.pnlObjetos.Controls.Add(this.label3);
-            this.pnlObjetos.Controls.Add(this.label2);
-            this.pnlObjetos.Controls.Add(this.label1);
-            this.pnlObjetos.Controls.Add(this.txtColunas);
-            this.pnlObjetos.Controls.Add(this.txtLinhas);
             this.pnlObjetos.Controls.Add(this.btnRestart);
             this.pnlObjetos.Name = "pnlObjetos";
             // 
@@ -74,34 +68,8 @@ namespace CampoMinado
             // 
             resources.ApplyResources(this.txtBombas, "txtBombas");
             this.txtBombas.Name = "txtBombas";
+            this.txtBombas.ReadOnly = true;
             this.txtBombas.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtBombas_KeyPress);
-            // 
-            // label3
-            // 
-            resources.ApplyResources(this.label3, "label3");
-            this.label3.Name = "label3";
-            // 
-            // label2
-            // 
-            resources.ApplyResources(this.label2, "label2");
-            this.label2.Name = "label2";
-            // 
-            // label1
-            // 
-            resources.ApplyResources(this.label1, "label1");
-            this.label1.Name = "label1";
-            // 
-            // txtColunas
-            // 
-            resources.ApplyResources(this.txtColunas, "txtColunas");
-            this.txtColunas.Name = "txtColunas";
-            this.txtColunas.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtColunas_KeyPress);
-            // 
-            // txtLinhas
-            // 
-            resources.ApplyResources(this.txtLinhas, "txtLinhas");
-            this.txtLinhas.Name = "txtLinhas";
-            this.txtLinhas.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtLinhas_KeyPress);
             // 
             // btnRestart
             // 
@@ -112,6 +80,22 @@ namespace CampoMinado
             this.btnRestart.TabStop = false;
             this.btnRestart.UseVisualStyleBackColor = false;
             this.btnRestart.Click += new System.EventHandler(this.btnRestart_Click);
+            // 
+            // comboBoxNivel
+            // 
+            resources.ApplyResources(this.comboBoxNivel, "comboBoxNivel");
+            this.comboBoxNivel.FormattingEnabled = true;
+            this.comboBoxNivel.Items.AddRange(new object[] {
+            resources.GetString("comboBoxNivel.Items"),
+            resources.GetString("comboBoxNivel.Items1"),
+            resources.GetString("comboBoxNivel.Items2")});
+            this.comboBoxNivel.Name = "comboBoxNivel";
+            this.comboBoxNivel.SelectedIndexChanged += new System.EventHandler(this.comboBoxNivel_SelectedIndexChanged);
+            // 
+            // label1
+            // 
+            resources.ApplyResources(this.label1, "label1");
+            this.label1.Name = "label1";
             // 
             // frmCampoMinando
             // 
@@ -139,13 +123,10 @@ namespace CampoMinado
         private System.Windows.Forms.Panel pnlObjetos;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox txtBombas;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox txtColunas;
-        private System.Windows.Forms.TextBox txtLinhas;
         private System.Windows.Forms.Button btnRestart;
-     //   private System.Windows.Forms.Panel pnlAcoes;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ComboBox comboBoxNivel;
+        //   private System.Windows.Forms.Panel pnlAcoes;
     }
 }
 

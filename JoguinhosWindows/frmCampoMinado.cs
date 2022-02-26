@@ -5,57 +5,45 @@ using System.Windows.Forms;
 namespace CampoMinado
 {
     public partial class frmCampoMinando : Form
-    {       
-        private  CampoMinadoMatriz matrizMinada { get; set; }     
+    {
+        private CampoMinadoMatriz matrizMinada { get; set; }
+        private int numeroBombas { get; set; } = 10;
+
+        private  bool firstLoad { get; set; } = true;
+
         public frmCampoMinando()
         {
-            InitializeComponent();         
+            InitializeComponent();
         }
         #region [--Metodos--]
 
         public void Reiniciar()
-        {              
-            
+        {
+
+            if (this.firstLoad)
+            {
+                this.comboBoxNivel.SelectedIndex = 1;
+                this.firstLoad = false;
+            }
+
             this.matrizMinada = new CampoMinadoMatriz();
-           
-            if(this.matrizMinada.InvokeRequired)
+
+            if (this.matrizMinada.InvokeRequired)
             {
                 var restart = new Action(Reiniciar);
                 this.matrizMinada.Invoke(restart);
             }
-            else 
+            else
             {
 
-            var totalLinhas = int.Parse(this.txtLinhas.Text);
-            var totalColunas = int.Parse(this.txtColunas.Text);
-            var totalBombas = int.Parse(this.txtBombas.Text);
+                var totalLinhas = 10;
+                var totalColunas = 10;
+                var totalBombas = this.numeroBombas;
 
-             if(totalLinhas < 3 || totalColunas<3 || totalBombas< 1)
-                {
-                    if (MessageBox.Show("As linhas devem ser no mínimo 3, colunas 3 e bombas 1! Deseja aplcar estes valores? ", "Atenção", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                    {
-                        totalLinhas = 3;
-                        totalColunas = 3;
-                        totalBombas = 1;
 
-                    }
-                }
-                else if (totalLinhas > 15 || totalColunas >  15 || totalBombas > 10)
-                {
-                    if (MessageBox.Show("As linhas devem ser no máximo 15, colunas 15 e bombas 10! Deseja aplcar estes valores? ", "Atenção", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                    {
-                        totalLinhas = 15;
-                        totalColunas = 15;
-                        totalBombas = 10;
-
-                    }
-                }
-
-                this.txtLinhas.Text = totalLinhas.ToString();
-                this.txtColunas.Text = totalColunas.ToString();
                 this.txtBombas.Text = totalBombas.ToString();
-                this.matrizMinada.Reiniciar(totalLinhas, totalColunas, totalBombas,this.pnlCampos);             
-           
+                this.matrizMinada.Reiniciar(totalLinhas, totalColunas, totalBombas, this.pnlCampos);
+
             }
 
             this.FormataBotaoRestart();
@@ -64,7 +52,8 @@ namespace CampoMinado
         private void FormataBotaoRestart()
         {
             btnRestart.FlatAppearance.MouseOverBackColor = btnRestart.BackColor;
-            btnRestart.BackColorChanged += (s, e) => {
+            btnRestart.BackColorChanged += (s, e) =>
+            {
                 btnRestart.FlatAppearance.MouseOverBackColor = btnRestart.BackColor;
             };
             toolTipoRestart.SetToolTip(btnRestart, "Reiniciar");
@@ -77,12 +66,12 @@ namespace CampoMinado
                 this.pnlObjetos.Refresh();
 
                 this.pnlCampos.Controls.Clear();
-                this.pnlCampos.Controls.Add(matrizMinada);              
+                this.pnlCampos.Controls.Add(matrizMinada);
                 this.pnlCampos.AutoSize = true;
-                this.pnlCampos.Refresh();          
-                
+                this.pnlCampos.Refresh();
+
                 this.AutoSize = true;
-                this.Refresh();             
+                this.Refresh();
 
             }
             catch (Exception)
@@ -91,7 +80,7 @@ namespace CampoMinado
                 throw;
             }
         }
-        private void SoNumeros (object sender, KeyPressEventArgs e)
+        private void SoNumeros(object sender, KeyPressEventArgs e)
         {
             e.Handled = !char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar);
         }
@@ -99,6 +88,9 @@ namespace CampoMinado
 
 
         #region [--Eventos--]
+
+
+
         private void frmCampoMinando_Load(object sender, EventArgs e)
         {
             this.Reiniciar();
@@ -111,7 +103,7 @@ namespace CampoMinado
 
         private void txtLinhas_KeyPress(object sender, KeyPressEventArgs e)
         {
-            this.SoNumeros(sender,e);
+            this.SoNumeros(sender, e);
         }
 
         private void txtColunas_KeyPress(object sender, KeyPressEventArgs e)
@@ -125,5 +117,32 @@ namespace CampoMinado
         }
 
         #endregion
+
+        private void comboBoxNivel_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var dificuldade = this.comboBoxNivel.SelectedItem;
+
+            switch (dificuldade.ToString().ToLower())
+            {
+                case "iniciante":
+                    this.numeroBombas = 5;
+                    break;
+
+                case "normal":
+                    this.numeroBombas = 10;
+                    break;
+
+                case "experiente":
+                    this.numeroBombas = 15;
+                    break;
+
+
+                default:
+                    throw new Exception();
+
+            }
+
+            this.Reiniciar();
+        }
     }
 }
