@@ -24,7 +24,6 @@ namespace CampoMinado.View
             matrixMinada.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             matrixMinada.GrowStyle = TableLayoutPanelGrowStyle.AddRows;
 
-
         }
 
         private void SorteiaBomba(ref int n)

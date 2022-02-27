@@ -116,7 +116,6 @@ namespace CampoMinado
             this.SoNumeros(sender, e);
         }
 
-        #endregion
 
         private void comboBoxNivel_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -144,5 +143,8 @@ namespace CampoMinado
 
             this.Reiniciar();
         }
+
+        #endregion
+
     }
 }

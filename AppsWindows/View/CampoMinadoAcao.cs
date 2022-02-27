@@ -1,7 +1,11 @@
 ﻿using CampoMinado.Code;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace CampoMinado.View
@@ -18,9 +22,14 @@ namespace CampoMinado.View
         public bool MinasEncontradas { get; set; } = false;
         public int TotalVizinhosMinados { get; set; } = 0;
         private ICampoMinado iCampoMinadoAcao { get; set; } = null;
+
+        private BackgroundWorker backgroundWorker { get; set; }
+
+
         public CampoMinadoAcao(int linha, int coluna,int largura =0 , int altura=0)
         {
-            
+
+            this.InitializeBackgroundWorker();
             this.MouseUp += CampoMinadoBotaoClick;
             this.Paint += CampoMinadoBotaoPaint;
             this.Width = largura;
@@ -34,6 +43,21 @@ namespace CampoMinado.View
             this.Margin = new Padding(0);
             this.AutoSize = true;
             this.Refresh();
+
+
+        }
+        private void InitializeBackgroundWorker()
+        {
+            if (this.backgroundWorker == null)
+                this.backgroundWorker = new BackgroundWorker();
+            backgroundWorker.DoWork += new DoWorkEventHandler(DoWorker);         
+         
+        }       
+
+
+        private void DoWorker(object sender, DoWorkEventArgs e)
+        {
+            ClicadoEsquerdo(sender, e);
         }
 
         public void SetContainer(ICampoMinado campoMinadoAcao)
@@ -50,7 +74,7 @@ namespace CampoMinado.View
             switch (e.Button)
             {
                 case MouseButtons.Left:
-                    ClicadoEsquerdo();
+                    backgroundWorker.RunWorkerAsync();                 
                     break;
 
                 case MouseButtons.Right:
@@ -60,28 +84,40 @@ namespace CampoMinado.View
 
             this.iCampoMinadoAcao.ConfereVenceuJogo();
         }
-        private void ClicadoEsquerdo()
-        {      
 
-               if (this.Image != null)
-                  if (MessageBox.Show("Este campo está marcado, deseja realmente abri-lo ? ", "Atenção", MessageBoxButtons.YesNo) == DialogResult.Yes)                   
-                       this.Image = null;               
+       
 
-               if (this.Seguro && this.Fechado)
-                   this.AbrirCampo(this);
+        private void ClicadoEsquerdo(object sender,DoWorkEventArgs e)
+        {
+            Task.Run(() =>
+            {
+                var result = this.Invoke(new Action(() =>
+                {                 
+                    
+                    if (this.Image != null)
+                        if (MessageBox.Show("Este campo está marcado, deseja realmente abri-lo ? ", "Atenção", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                            this.Image = null;
 
-               else if (this.Fechado && this.Minado)
-               {
-                   this.Aberto = true;
-                   this.Image = Image.FromFile(Constantes.IMAGE_BOMB);
+                    if (this.Seguro && this.Fechado)
+                        this.AbrirCampo(this);
 
-                if (MessageBox.Show("Você perdeu, iniciar novo jogo? ", "Bomba", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                    this.iCampoMinadoAcao.Reiniciar();
-                else
-                    this.iCampoMinadoAcao.Finaliza();
-               }   
+                    else if (this.Fechado && this.Minado)
+                    {
+                        this.Aberto = true;
+                        this.Image = Image.FromFile(Constantes.IMAGE_BOMB);
+
+                        if (MessageBox.Show("Você perdeu, iniciar novo jogo? ", "Bomba", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                            this.iCampoMinadoAcao.Reiniciar();
+                        else
+                            this.iCampoMinadoAcao.Finaliza();
+                    }                   
+
+                }));
+            });
 
 
+            e.Result = DateTime.Now.Ticks;
+           
         }
         private void ClicadoDireito()
         {
@@ -105,15 +141,19 @@ namespace CampoMinado.View
         }
         private void DesenhaBotao3D(object sender, PaintEventArgs e)
         {
+           
            ControlPaint.DrawBorder(e.Graphics, (sender as CampoMinadoAcao).ClientRectangle,
            SystemColors.ControlLightLight, 5, ButtonBorderStyle.Outset,
            SystemColors.ControlLightLight, 5, ButtonBorderStyle.Outset,
            SystemColors.ControlLightLight, 5, ButtonBorderStyle.Outset,
-           SystemColors.ControlLightLight, 5, ButtonBorderStyle.Outset);
+           SystemColors.ControlLightLight, 5, ButtonBorderStyle.Outset);           
+
         }
+
+      
         private void AbrirCampo(CampoMinadoAcao campo)
         {
-
+          
             if (campo.Seguro && campo.Fechado && campo.VizinhosSeguro)
                 FormataCampoSeguro(campo);
             else if (campo.Seguro && !campo.VizinhosSeguro)
@@ -122,6 +162,7 @@ namespace CampoMinado.View
                 campo.Image = null;
             else
                 return;
+
         }
         private void FormataCampoInseguro(CampoMinadoAcao campo)
         {
